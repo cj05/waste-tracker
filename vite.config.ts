@@ -13,6 +13,7 @@ export default defineConfig({
     vueDevTools(),
     tailwindcss(),
   ],
+  base: "/waste-tracker/",
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
