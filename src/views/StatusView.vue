@@ -4,14 +4,14 @@ import StatusHeader from '../components/Status/StatusHeader.vue'
 import DriverInfo from '../components/Status/DriverInfo.vue'
 import MapSection from '../components/Status/MapSection.vue'
 import TimeInfo from '../components/Status/TimeInfo.vue'
-import MenuHeader from '../components/MenuHeader.vue'
-const progressValue = ref(0)
-const title = ref('MENU')
+import MenuHeader from '../components/MenuHeaderProgress.vue'
+const progressValue = ref(50)
+const title = ref('Status')
 </script>
 
 <template>
   <main>
-    <MenuHeader :title="title" />
+    <MenuHeader :title="title" :progressValue="progressValue" />
     <div class="flex items-center justify-center">
       <div class="flex flex-wrap">
         <div class="flex flex-wrap gap-10 rounded-none min-w-[240px] w-[1725px] max-md:max-w-full">
