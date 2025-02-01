@@ -5,7 +5,8 @@
   "type": "module",
   "homepage": "https://cj05.github.io/waste-tracker/",
   "scripts": {
-    "predeploy": "npm run build",
+    "predeploy": "npm run build && npm run spafix",
+    "spafix": "copy .\\dist\\index.html .\\dist\\404.html",
     "deploy": "gh-pages -d dist",
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
