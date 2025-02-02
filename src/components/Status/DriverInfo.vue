@@ -4,11 +4,11 @@
         <div class="flex shrink-0 self-center w-20 h-20 bg-white rounded-full"></div>
         <div class="flex shrink-0 bg-white rounded-2xl h-[100px] w-[130px]"></div>
       </div>
-      <div class="px-1.5 pt-1.5 pb-6 mt-5 max-w-full text-4xl font-semibold text-black whitespace-nowrap rounded-2xl bg-slate-400 w-[400px] max-md:pr-5">
-        Mr.A
+      <div class="px-1.5 pt-1.5 pb-6 mt-5 max-w-full text-4xl font-semibold text-black whitespace-nowrap rounded-2xl bg-slate-400 w-[800px] max-md:pr-5">
+        Mr.PenPineappleApplePen
       </div>
       <div class="px-1.5 py-1.5 mt-7 text-4xl font-semibold text-black rounded-2xl bg-slate-400 max-md:pr-5">
-        Plate number
+        Plate number: 12-89467
       </div>
     </div>
   </template>

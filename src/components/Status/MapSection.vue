@@ -13,10 +13,10 @@
       </div>
       <div class="flex flex-wrap flex-1 shrink gap-10 justify-center items-center text-4xl font-bold text-center basis-0 min-w-[240px] text-zinc-500 max-md:max-w-full">
         <div class="flex flex-col self-stretch my-auto rounded-[40px] w-[180px]">
-          <div class="px-5 bg-slate-400 h-[180px] rounded-[40px] w-[180px] max-md:px-5">Map 1</div>
+          <router-link to="/map1" class="px-5 bg-slate-400 h-[180px] rounded-[40px] w-[180px] max-md:px-5">Map 1</router-link>
         </div>
         <div class="flex flex-col self-stretch my-auto rounded-[40px] w-[180px]">
-          <div class="px-5 bg-slate-400 h-[180px] rounded-[40px] w-[180px] max-md:px-5">Map 2</div>
+          <router-link to="/map2" class="px-5 bg-slate-400 h-[180px] rounded-[40px] w-[180px] max-md:px-5">Map 2</router-link>
         </div>
       </div>
     </div>
