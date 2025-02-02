@@ -27,6 +27,7 @@ const center = ref([13.771513, 460.586636])
 const markerCoords = ref([ [ 13.770002456596833, 460.5888676643372 ], [ 13.78392380181997, 460.5827575922013 ] ])
 
 const onClickMap = (e: any) => {
+    // for when you click the map
     /*console.log(e)
     markerCoords.value.push([e.latlng.lat, e.latlng.lng])
     markerCoords.value = markerCoords.value.map(x => x)

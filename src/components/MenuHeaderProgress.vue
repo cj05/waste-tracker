@@ -18,7 +18,7 @@ import HomeButton from './HomeButton.vue'
         <div class="mt-10 w-full border-solid border-b-[10px] border-b-cyan-800 max-sm:mt-5"></div>
       </div>
       <div class="w-full h-8 max-w-full bg-gray-400 rounded-full">
-        <div class="h-8 border-b-cyan-800 rounded-full" :style="{ width: progressValue + '%' }"></div>
+        <div class="h-8 bg-cyan-700 rounded-full" :style="{ width: progressValue + '%' }"></div>
       </div>
     </div>
     <div>
