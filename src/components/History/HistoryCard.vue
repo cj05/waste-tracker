@@ -7,7 +7,7 @@ export default defineComponent({
     date: {
       type: String,
       required: true
-    }
+    },
   }
 })
 </script>

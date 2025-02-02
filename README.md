@@ -31,3 +31,16 @@ npm run dev
 ```sh
 npm run build
 ```
+
+# Code Structure
+As of commit 36076f9acbb189fa8f18ff282f820381312c01a7
+
+index.html < main.ts < App.vue < vue-router
+                 ^
+        router/index.ts -------------^
+                ^
+                |- / :          component/views/HomeView         <  component/MainMenu/*
+                |- /history/ :  component/views/HistoryView.vue
+                |- /map1/ :     component/views/MapView.vue      <  component/Map1/*
+                |- /map2/ :     component/views/Map2View         <  component/Map2/*
+                |- /status/ :   component/views/StatusView       <  component/Status/*
