@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import HomeButton from '@/components/HomeButton.vue';
 import MapComp from '../components/Map1/Map.vue';
+import MapStats from '../components/Map1/MapStats.vue';
+import { ref } from 'vue';
 interface MapTwoProps {
   title?: string;
 }
 
 defineProps<MapTwoProps>();
+
+const stats = ref(true)
 </script>
 
 <template>
@@ -14,7 +18,9 @@ defineProps<MapTwoProps>();
     role="region"
     aria-label="Map Two Container"
   >
-    <MapComp/>
+    
+    <MapStats v-if="stats"/>
+    <MapComp v-else/>
     <div class="absolute">
       <HomeButton/>
     </div>
