@@ -2,6 +2,7 @@
 import HomeButton from '@/components/HomeButton.vue';
 import Map from '../components/Map1/Map.vue';
 import { ref, onMounted, watchEffect } from 'vue';
+import { useLocalStorage } from '@vueuse/core';
 interface MapTwoProps {
   title?: string;
 }
@@ -12,6 +13,8 @@ interface markers {
 }
 
 defineProps<MapTwoProps>();
+  const markerCoords = useLocalStorage<markers[]>("markers",[{ coord: [13.770002456596833, 460.5888676643372], lasttime: Date.now() / 1000 }])
+/*
 const markerCoords = ref<markers[]>()
 
 
@@ -34,7 +37,7 @@ onMounted(() => {
   }
 
 
-})
+})*/
 </script>
 
 <template>
