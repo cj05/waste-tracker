@@ -1,6 +1,6 @@
 <template>
     <div class="fixed top-0 right-0 w-full h-screen z-[0]">
-        <LMap ref="map" v-model:zoom="zoom" v-model:center="center" @click="onClickMap">
+        <LMap ref="map" v-model:zoom="zoom" v-model:center="center" @click="onClickMap" :use-global-leaflet="false">
             <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base" name="OpenStreetMap">
             </LTileLayer>
             <div v-if="stats">
