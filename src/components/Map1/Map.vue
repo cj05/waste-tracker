@@ -3,26 +3,25 @@
         <LMap ref="map" v-model:zoom="zoom" v-model:center="center" @click="onClickMap" :use-global-leaflet="false">
             <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base" name="OpenStreetMap">
             </LTileLayer>
-            <div v-if="stats">
-                <LCircleMarker v-for="coord in markerCoords" :lat-lng="coord.coord" class="pointer-events-none"
-                    @click="(e:any)=>onClickMarker(e,coord)" color="red"
-                    :radius="(sigmoid((Date.now() / 1000 - coord.lasttime) / 60 / 60 / 24 * 5 - 6) * 28 + 2) / 18000 * Math.pow(2, zoom)">
-                    <!-- pov: i was bored, so basically right its a sigmoid function with a bit of offset -->>
-                    <LTooltip class="pointer-events-none"> trash <br /> Last Collection: {{
-                        ((Date.now() / 1000 - coord.lasttime) / 60 / 60).toFixed(2) }} Hrs </LTooltip>
-                </LCircleMarker>
+            <div v-for="coord in markerCoords">
+                <div v-if="coord.temporary">
+                    <LCircleMarker :lat-lng="coord.coord" class="pointer-events-none"
+                        @click="(e: any) => onClickMarker(e, coord)" color="red"
+                        :radius="2 / 18000 * Math.pow(2, zoom)">
+                        <!-- pov: i was bored, so basically right its a sigmoid function with a bit of offset -->>
+                        <LTooltip class="pointer-events-none"> trash <br /> Last Collection: {{
+                            ((Date.now() / 1000 - coord.lasttime) / 60 / 60).toFixed(2) }} Hrs </LTooltip>
+                    </LCircleMarker>
+                </div>
+                <div v-else>
+                    <LMarker :lat-lng="coord.coord" class="pointer-events-none"
+                        @click="(e: any) => onClickMarker(e, coord)">
+                        <LIcon :icon-url="trashmarker" :icon-size="[60, 60]" />
+                        <LTooltip class="pointer-events-none"> trash <br /> Last Collection: {{
+                            ((Date.now() / 1000 - coord.lasttime) / 60 / 60).toFixed(2) }} Hrs </LTooltip>
+                    </LMarker>
+                </div>
             </div>
-            <div v-else>
-                <LMarker v-for="coord in markerCoords" :lat-lng="coord.coord" class="pointer-events-none"
-                    @click="(e:any)=>onClickMarker(e,coord)">
-                    <LIcon :icon-url="trashmarker" :icon-size="[60, 60]" />
-                    <LTooltip class="pointer-events-none"> trash <br /> Last Collection: {{
-                        ((Date.now() / 1000 - coord.lasttime) / 60 / 60).toFixed(2) }} Hrs </LTooltip>
-                </LMarker>
-            </div>
-
-
-
         </LMap>
 
     </div>
@@ -30,8 +29,8 @@
         {{ center }}
         {{ zoom }}
     </div>
-    <button @click="toggleStats" class="fixed z-120 bottom-4 left-4 px-4 py-2 bg-slate-400 text-white rounded"
-        :class="stats ? 'bg-slate-600' : ''">
+    <button @click="toggleTemp" class="fixed z-120 bottom-4 left-4 px-4 py-2 bg-slate-400 text-white rounded"
+        :class="temptoggle ? 'bg-slate-600' : ''">
         !
     </button>
     <Teleport defer to="#above">
@@ -50,6 +49,7 @@
 interface markers {
     coord: Array<number>
     lasttime: number
+    temporary: boolean
 }
 
 
@@ -62,26 +62,27 @@ const zoom = ref(16)
 const center = ref([13.771513, 460.586636])
 const markerCoords = defineModel<markers[]>('markerCoords')
 
-const stats = ref(false)
+const temptoggle = ref(false)
 const create = ref(false)
 
-const toggleStats = () => {
-    stats.value = !stats.value
+const toggleTemp = () => {
+    temptoggle.value = !temptoggle.value
 }
 const toggleCreate = () => {
     create.value = !create.value
 }
 
 const createTrash = (coord: number[]) => {
-    markerCoords.value?.push({ coord: coord, lasttime: Date.now() / 1000 })
+    markerCoords.value?.push({ coord: coord, lasttime: Date.now() / 1000 , temporary: temptoggle.value})
     markerCoords.value = markerCoords.value?.map(x => x) // force refresh arr
 }
 
 const deleteTrash = (coord: number[]) => {
-    markerCoords.value = markerCoords.value?.filter(x=>{return x.coord[0] != coord[0] && x.coord[1] != coord[1]}) // force refresh arr
+    // correct coord && (if temporary 0 => if create.value 0 => 1, 1 => 0,1 => 0)
+    markerCoords.value = markerCoords.value?.filter(x => { return (x.coord[0] != coord[0] || x.coord[1] != coord[1]) || !( x.temporary || create.value) }) // force refresh arr
 }
 
-const sigmoid = (x: number) => 1 / (1 + Math.pow(2.7182821, -x))
+//const sigmoid = (x: number) => 1 / (1 + Math.pow(2.7182821, -x))
 
 const onClickMap = (e: any) => {
     if (create.value) {
@@ -89,10 +90,9 @@ const onClickMap = (e: any) => {
     }
 }
 
-const onClickMarker = (e: any,o:any) => {
-    if (create.value) {
-        deleteTrash(o.coord)
-    }
+const onClickMarker = (e: any, o: any) => {
+    console.log(e.target._latlng)
+    deleteTrash([e.target._latlng.lat,e.target._latlng.lng])
 }
 
 
