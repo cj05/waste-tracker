@@ -1,20 +1,46 @@
 <script setup lang="ts">
 import HomeButton from '@/components/HomeButton.vue';
 import Map from '../components/Map1/Map.vue';
-import { ref } from 'vue';
+import { ref, onMounted, watchEffect } from 'vue';
 interface MapTwoProps {
   title?: string;
 }
 
-defineProps<MapTwoProps>();
+interface markers {
+  coord: Array<number>
+  lasttime: number
+}
 
-const stats = ref(true)
+defineProps<MapTwoProps>();
+const markerCoords = ref<markers[]>()
+
+
+watchEffect(() => localStorage.setItem("markers",JSON.stringify(markerCoords.value)))
+
+onMounted(() => {
+  // update
+  console.log(localStorage.getItem("markers"))
+
+  try {
+    let str = localStorage.getItem("markers")
+    console.log("obj:",str??'[]')
+    let markersobj = JSON.parse(str??'[]')
+    console.log(markersobj)
+    //markerCoords.value = markersobj
+  } catch (e) {
+    console.log(e)
+    markerCoords.value = [{ coord: [13.770002456596833, 460.5888676643372], lasttime: Date.now() / 1000 }, { coord: [13.78392380181997, 460.5827575922013], lasttime: Date.now() / 1000 - 60 * 60 * 24 * 2 }]
+
+  }
+
+
+})
 </script>
 
 <template>
   <div class="overflow-hidden relative w-full h-screen bg-slate-200" role="region" aria-label="Map Two Container">
 
-    <Map />
+    <Map v-model:markerCoords="markerCoords" />
     <div class="absolute">
       <HomeButton />
     </div>

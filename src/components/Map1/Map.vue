@@ -44,14 +44,21 @@
 </template>
 
 <script setup lang="ts">
+
+interface markers {
+  coord: Array<number>
+  lasttime: number
+}
+
+
 import "leaflet/dist/leaflet.css";
 import { LMap, LTileLayer, LMarker, LIcon, LTooltip, LCircleMarker } from "@vue-leaflet/vue-leaflet";
-import { ref } from "vue";
+import { ref , defineModel } from "vue";
 import trashmarker from '../../assets/trashmarker.png'
 
 const zoom = ref(16)
 const center = ref([13.771513, 460.586636])
-const markerCoords = ref([{ coord: [13.770002456596833, 460.5888676643372], lasttime: Date.now() / 1000 }, { coord: [13.78392380181997, 460.5827575922013], lasttime: Date.now() / 1000 - 60 * 60 * 24 * 2 }])
+const markerCoords = defineModel<markers[]>('markerCoords')
 
 const stats = ref(false)
 const create = ref(false)
@@ -64,8 +71,8 @@ const toggleCreate = () => {
 }
 
 const createTrash = (coord: number[]) => {
-    markerCoords.value.push({ coord: coord, lasttime: Date.now() / 1000 })
-    markerCoords.value = markerCoords.value.map(x => x) // force refresh arr
+    markerCoords.value?.push({ coord: coord, lasttime: Date.now() / 1000 })
+    markerCoords.value = markerCoords.value?.map(x => x) // force refresh arr
 }
 
 const sigmoid = (x: number) => 1 / (1 + Math.pow(2.7182821, -x))
