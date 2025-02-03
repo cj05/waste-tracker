@@ -6,7 +6,7 @@
             <div v-if="stats">
                 <LCircleMarker v-for="coord in markerCoords" :lat-lng="coord.coord" class="pointer-events-none"
                     color="red"
-                    :radius="sigmoid((Date.now() / 1000 - coord.lasttime) / 60 / 60 / 24 * 5 - 6) * 20 + 10">
+                    :radius="( sigmoid((Date.now() / 1000 - coord.lasttime) / 60 / 60 / 24 * 5 - 6) * 28 + 2 )/18000 * Math.pow(2,zoom)">
                     <!-- pov: i was bored, so basically right its a sigmoid function with a bit of offset -->>
                     <LTooltip class="pointer-events-none"> Last Collection: {{
                         ((Date.now() / 1000 - coord.lasttime) / 60 / 60).toFixed(2) }} Hrs </LTooltip>
@@ -28,13 +28,14 @@
         {{ center }}
         {{ zoom }}
     </div>
-    <button @click="toggleStats" class="fixed z-120 bottom-4 left-4 px-4 py-2 bg-blue-500 text-white rounded">
+    <button @click="toggleStats" class="fixed z-120 bottom-4 left-4 px-4 py-2 bg-slate-400 text-white rounded" :class="stats ? 'bg-slate-600' : ''">
         !
     </button>
     <Teleport defer to="#above">
         <div class="flex items-center justify-center">
             <button @click="toggleCreate"
-                class="px-10 py-6 bg-blue-500 rounded-xl text-4xl font-bold text-center text-black bg-slate-400">
+            class="px-10 py-6 bg-blue-500 rounded-xl text-4xl font-bold text-center text-black bg-slate-400"
+                 :class="create ? 'bg-slate-600' : ''">
                 +
             </button>
         </div>
