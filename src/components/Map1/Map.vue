@@ -10,15 +10,16 @@
                         :radius="2 / 18000 * Math.pow(2, zoom)">
                         <!-- pov: i was bored, so basically right its a sigmoid function with a bit of offset -->>
                         <LTooltip class="pointer-events-none"> trash <br /> Last Collection: {{
-                            ((Date.now() / 1000 - coord.lasttime) / 60 / 60).toFixed(2) }} Hrs </LTooltip>
+                            ((Date.now() / 1000 - coord.lasttime) / 3600).toFixed(2) }} Hrs </LTooltip>
                     </LCircleMarker>
                 </div>
                 <div v-else>
                     <LMarker :lat-lng="coord.coord" class="pointer-events-none"
                         @click="(e: any) => onClickMarker(e, coord)">
-                        <LIcon :icon-url="trashmarker" :icon-size="[60, 60]" />
+                        <LIcon :icon-url="Math.floor(Date.now()/86400000) -  Math.floor(coord.lasttime/86400) > 0?
+                        trashmarker:collectedmarker" :icon-size="[60, 60]" />
                         <LTooltip class="pointer-events-none"> trash <br /> Last Collection: {{
-                            ((Date.now() / 1000 - coord.lasttime) / 60 / 60).toFixed(2) }} Hrs </LTooltip>
+                            ((Date.now() / 1000 - coord.lasttime) / 3600).toFixed(2) }} Hrs </LTooltip>
                     </LMarker>
                 </div>
             </div>
@@ -57,6 +58,7 @@ import "leaflet/dist/leaflet.css";
 import { LMap, LTileLayer, LMarker, LIcon, LTooltip, LCircleMarker } from "@vue-leaflet/vue-leaflet";
 import { ref, defineModel } from "vue";
 import trashmarker from '../../assets/trashmarker.png'
+import collectedmarker from '../../assets/collectedmarker.png'
 
 const zoom = ref(16)
 const center = ref([13.771513, 460.586636])
@@ -73,7 +75,7 @@ const toggleCreate = () => {
 }
 
 const createTrash = (coord: number[]) => {
-    markerCoords.value?.push({ coord: coord, lasttime: Date.now() / 1000 , temporary: temptoggle.value})
+    markerCoords.value?.push({ coord: coord, lasttime: 0 , temporary: temptoggle.value})
     markerCoords.value = markerCoords.value?.map(x => x) // force refresh arr
 }
 
@@ -92,7 +94,13 @@ const onClickMap = (e: any) => {
 
 const onClickMarker = (e: any, o: any) => {
     console.log(e.target._latlng)
-    deleteTrash([e.target._latlng.lat,e.target._latlng.lng])
+    const coord = [e.target._latlng.lat,e.target._latlng.lng]
+    let marker = markerCoords.value?.find(x=>x.coord[0] == coord[0] && x.coord[1] == coord[1])
+    if(marker && !marker.temporary && !create.value && ( Math.floor(Date.now()/86400000) -  Math.floor(marker.lasttime/86400)) > 0){
+        marker.lasttime = Date.now()/1000
+    }else{
+        deleteTrash(coord)
+    }
 }
 
 

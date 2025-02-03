@@ -10,10 +10,11 @@ interface MapTwoProps {
 interface markers {
   coord: Array<number>
   lasttime: number
+  temporary: boolean
 }
 
 defineProps<MapTwoProps>();
-  const markerCoords = useLocalStorage<markers[]>("markers",[{ coord: [13.770002456596833, 460.5888676643372], lasttime: Date.now() / 1000 }])
+  const markerCoords = useLocalStorage<markers[]>("markers",[{ coord: [13.770002456596833, 460.5888676643372], lasttime: Date.now() / 1000 , temporary: false}])
 /*
 const markerCoords = ref<markers[]>()
 
