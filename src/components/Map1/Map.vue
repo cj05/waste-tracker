@@ -3,10 +3,24 @@
         <LMap ref="map" v-model:zoom="zoom" v-model:center="center" @click="onClickMap">
             <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base" name="OpenStreetMap">
             </LTileLayer>
-            <LMarker v-for="coord in markerCoords" :lat-lng="coord" class="pointer-events-none">
-                <LIcon :icon-url="trashmarker" :icon-size="[60, 60]" />
-                <LTooltip class="pointer-events-none"> trash </LTooltip>
-            </LMarker>
+            <div v-if="stats">
+                <LCircleMarker v-for="coord in markerCoords" :lat-lng="coord.coord" class="pointer-events-none"
+                    color="red"
+                    :radius="sigmoid((Date.now() / 1000 - coord.lasttime) / 60 / 60 / 24 * 5 - 6) * 20 + 10">
+                    <!-- pov: i was bored, so basically right its a sigmoid function with a bit of offset -->>
+                    <LTooltip class="pointer-events-none"> Last Collection: {{
+                        ((Date.now() / 1000 - coord.lasttime) / 60 / 60).toFixed(2) }} Hrs </LTooltip>
+                </LCircleMarker>
+            </div>
+            <div v-else>
+                <LMarker v-for="coord in markerCoords" :lat-lng="coord.coord" class="pointer-events-none">
+                    <LIcon :icon-url="trashmarker" :icon-size="[60, 60]" />
+                    <LTooltip class="pointer-events-none"> trash </LTooltip>
+                </LMarker>
+            </div>
+
+
+
         </LMap>
 
     </div>
@@ -14,24 +28,52 @@
         {{ center }}
         {{ zoom }}
     </div>
+    <button @click="toggleStats" class="fixed z-120 bottom-4 left-4 px-4 py-2 bg-blue-500 text-white rounded">
+        !
+    </button>
+    <Teleport defer to="#above">
+        <div class="flex items-center justify-center">
+            <button @click="toggleCreate"
+                class="px-10 py-6 bg-blue-500 rounded-xl text-4xl font-bold text-center text-black bg-slate-400">
+                +
+            </button>
+        </div>
+    </Teleport>
 </template>
 
 <script setup lang="ts">
 import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer, LMarker, LIcon, LTooltip, LPolyline } from "@vue-leaflet/vue-leaflet";
+import { LMap, LTileLayer, LMarker, LIcon, LTooltip, LCircleMarker } from "@vue-leaflet/vue-leaflet";
 import { ref } from "vue";
 import trashmarker from '../../assets/trashmarker.png'
 
 const zoom = ref(16)
 const center = ref([13.771513, 460.586636])
-const markerCoords = ref([ [ 13.770002456596833, 460.5888676643372 ], [ 13.78392380181997, 460.5827575922013 ] ])
+const markerCoords = ref([{ coord: [13.770002456596833, 460.5888676643372], lasttime: Date.now() / 1000 }, { coord: [13.78392380181997, 460.5827575922013], lasttime: Date.now() / 1000 - 60 * 60 * 24 * 2 }])
+
+const stats = ref(false)
+const create = ref(false)
+
+const toggleStats = () => {
+    stats.value = !stats.value
+}
+const toggleCreate = () => {
+    create.value = !create.value
+}
+
+const createTrash = (coord: number[]) => {
+    markerCoords.value.push({ coord: coord, lasttime: Date.now() / 1000 })
+    markerCoords.value = markerCoords.value.map(x => x) // force refresh arr
+}
+
+const sigmoid = (x: number) => 1 / (1 + Math.pow(2.7182821, -x))
 
 const onClickMap = (e: any) => {
-    // for when you click the map
-    /*console.log(e)
-    markerCoords.value.push([e.latlng.lat, e.latlng.lng])
-    markerCoords.value = markerCoords.value.map(x => x)
-    console.log(markerCoords.value)*/
+    if (create.value) {
+        console.log(e)
+        createTrash([e.latlng.lat, e.latlng.lng])
+        console.log(markerCoords.value)
+    }
 }
 
 
