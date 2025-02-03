@@ -8,14 +8,15 @@
                     color="red"
                     :radius="( sigmoid((Date.now() / 1000 - coord.lasttime) / 60 / 60 / 24 * 5 - 6) * 28 + 2 )/18000 * Math.pow(2,zoom)">
                     <!-- pov: i was bored, so basically right its a sigmoid function with a bit of offset -->>
-                    <LTooltip class="pointer-events-none"> Last Collection: {{
+                    <LTooltip class="pointer-events-none"> trash <br/> Last Collection: {{
                         ((Date.now() / 1000 - coord.lasttime) / 60 / 60).toFixed(2) }} Hrs </LTooltip>
                 </LCircleMarker>
             </div>
             <div v-else>
                 <LMarker v-for="coord in markerCoords" :lat-lng="coord.coord" class="pointer-events-none">
                     <LIcon :icon-url="trashmarker" :icon-size="[60, 60]" />
-                    <LTooltip class="pointer-events-none"> trash </LTooltip>
+                    <LTooltip class="pointer-events-none"> trash <br/> Last Collection: {{
+                        ((Date.now() / 1000 - coord.lasttime) / 60 / 60).toFixed(2) }} Hrs </LTooltip>
                 </LMarker>
             </div>
 
