@@ -3,21 +3,28 @@ import { defineComponent, ref } from 'vue'
 import HistoryCard from '../components/History/HistoryCard.vue'
 import MenuHeader from '@/components/MenuHeader.vue';
 import moment from 'moment';
+import { useLocalStorage } from '@vueuse/core';
 interface HistoryItem {
   date: string
-  completion:number
-  driverData:{
-
+  completion: number
+  driverData: {
+    driverName: string, plateNumber: string, departureTime: string, arrivalTime: string
   }
+  marker: {
+    coord: number[]
+    lasttime: number
+    collected: boolean
+  }[]
 }
 
 
-const historyItems: HistoryItem[] = [
-  { date: moment().subtract(1, 'days').format('YYYYMMDD')   , driverData: {} ,completion:50},
-  { date: moment().subtract(2, 'days').format('YYYYMMDD')   , driverData: {} ,completion:70},
-  { date: moment().subtract(30, 'days').format('YYYYMMDD')   , driverData: {} ,completion:98}
+
+const historyItem = useLocalStorage("history", [
+  { date: moment().subtract(1, 'days').format('YYYYMMDD'), driverData: { driverName:"Mr. Apple", plateNumber:"01-23456", departureTime:"10:00",arrivalTime:"10:45"}, completion: 50, marker: [{ "coord": [10, 10], "lasttime": 10, "collected": false }] },
+  { date: moment().subtract(2, 'days').format('YYYYMMDD'), driverData: { driverName:"Mr. Bananae", plateNumber:"01-98765", departureTime:"13:00",arrivalTime:"14:15"}, completion: 70, marker: [{ "coord": [10, 10], "lasttime": 10, "collected": false }] },
+  { date: moment().subtract(30, 'days').format('YYYYMMDD'), driverData: { driverName:"Mr. Grape", plateNumber:"01-34682", departureTime:"8:47",arrivalTime:"9:23"}, completion: 98, marker: [{ "coord": [10, 10], "lasttime": 10, "collected": false }] }
   //moment(date, "YYYYMMDD").fromNow()
-]
+])
 const title = ref('History')
 </script>
 
@@ -26,7 +33,8 @@ const title = ref('History')
     <MenuHeader :title="title" />
 
     <main class="px-5 py-0 mx-auto my-10 max-w-[1400px] max-sm:mx-auto max-sm:my-5">
-      <HistoryCard v-for="item in historyItems" :key="item.date" :date="item.date" :completion="item.completion"/>
+      <HistoryCard v-for="item in historyItem" :key="item.date" :date="item.date" :completion="item.completion"
+        :marker="item.marker" :driver-info="item.driverData"/>
     </main>
   </div>
 </template>

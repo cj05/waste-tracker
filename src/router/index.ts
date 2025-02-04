@@ -27,6 +27,11 @@ const router = createRouter({
       component: () => import('../views/Map2View.vue'),
     },
     {
+      path: '/map3',
+      name: 'map3',
+      component: () => import('../views/Map3View.vue'),
+    },
+    {
       path: '/history',
       name: 'history',
       component: () => import('../views/HistoryView.vue'),
